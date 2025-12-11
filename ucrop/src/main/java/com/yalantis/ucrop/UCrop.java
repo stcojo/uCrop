@@ -311,6 +311,11 @@ public class UCrop {
         public static final String EXTRA_ASPECT_RATIO_SELECTED_BY_DEFAULT = EXTRA_PREFIX + ".AspectRatioSelectedByDefault";
         public static final String EXTRA_ASPECT_RATIO_OPTIONS = EXTRA_PREFIX + ".AspectRatioOptions";
 
+        public static final String EXTRA_ASPECT_RATIO_ORIGINAL_LABEL = EXTRA_PREFIX + ".AspectRatioOriginalLabel";
+        public static final String EXTRA_CROP_LABEL = EXTRA_PREFIX + ".CropLabel";
+        public static final String EXTRA_ROTATE_LABEL = EXTRA_PREFIX + ".RotateLabel";
+        public static final String EXTRA_SCALE_LABEL = EXTRA_PREFIX + ".ScaleLabel";
+
         public static final String EXTRA_UCROP_ROOT_VIEW_BACKGROUND_COLOR = EXTRA_PREFIX + ".UcropRootViewBackgroundColor";
 
 
@@ -550,6 +555,34 @@ public class UCrop {
          */
         public void setRootViewBackgroundColor(@ColorInt int color) {
             mOptionBundle.putInt(EXTRA_UCROP_ROOT_VIEW_BACKGROUND_COLOR, color);
+        }
+
+        /**
+         * @param label - custom label for the original aspect ratio option
+         */
+        public void setAspectRatioOriginalLabel(@Nullable String label) {
+            mOptionBundle.putString(EXTRA_ASPECT_RATIO_ORIGINAL_LABEL, label);
+        }
+
+        /**
+         * @param label - custom label for the crop action
+         */
+        public void setCropLabel(@Nullable String label) {
+            mOptionBundle.putString(EXTRA_CROP_LABEL, label);
+        }
+
+        /**
+         * @param label - custom label for the rotate action
+         */
+        public void setRotateLabel(@Nullable String label) {
+            mOptionBundle.putString(EXTRA_ROTATE_LABEL, label);
+        }
+
+        /**
+         * @param label - custom label for the scale action
+         */
+        public void setScaleLabel(@Nullable String label) {
+            mOptionBundle.putString(EXTRA_SCALE_LABEL, label);
         }
 
         /**

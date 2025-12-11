@@ -86,6 +86,10 @@ public class UCropActivity extends AppCompatActivity {
     private static final int ROTATE_WIDGET_SENSITIVITY_COEFFICIENT = 42;
 
     private String mToolbarTitle;
+    private String mAspectRatioOriginalLabel;
+    private String mCropLabel;
+    private String mRotateLabel;
+    private String mScaleLabel;
 
     // Enables dynamic coloring
     private int mToolbarColor;
@@ -310,6 +314,10 @@ public class UCropActivity extends AppCompatActivity {
         mToolbarCropDrawable = intent.getIntExtra(UCrop.Options.EXTRA_UCROP_WIDGET_CROP_DRAWABLE, R.drawable.ucrop_ic_done);
         mToolbarTitle = intent.getStringExtra(UCrop.Options.EXTRA_UCROP_TITLE_TEXT_TOOLBAR);
         mToolbarTitle = mToolbarTitle != null ? mToolbarTitle : getResources().getString(R.string.ucrop_label_edit_photo);
+        mAspectRatioOriginalLabel = intent.getStringExtra(UCrop.Options.EXTRA_ASPECT_RATIO_ORIGINAL_LABEL);
+        mCropLabel = intent.getStringExtra(UCrop.Options.EXTRA_CROP_LABEL);
+        mRotateLabel = intent.getStringExtra(UCrop.Options.EXTRA_ROTATE_LABEL);
+        mScaleLabel = intent.getStringExtra(UCrop.Options.EXTRA_SCALE_LABEL);
         mLogoColor = intent.getIntExtra(UCrop.Options.EXTRA_UCROP_LOGO_COLOR, ContextCompat.getColor(this, R.color.ucrop_color_default_logo));
         mShowBottomControls = !intent.getBooleanExtra(UCrop.Options.EXTRA_HIDE_BOTTOM_CONTROLS, false);
         mRootViewBackgroundColor = intent.getIntExtra(UCrop.Options.EXTRA_UCROP_ROOT_VIEW_BACKGROUND_COLOR, ContextCompat.getColor(this, R.color.ucrop_color_crop_background));
@@ -445,6 +453,24 @@ public class UCropActivity extends AppCompatActivity {
         stateScaleImageView.setImageDrawable(new SelectedStateListDrawable(stateScaleImageView.getDrawable(), mActiveControlsWidgetColor));
         stateRotateImageView.setImageDrawable(new SelectedStateListDrawable(stateRotateImageView.getDrawable(), mActiveControlsWidgetColor));
         stateAspectRatioImageView.setImageDrawable(new SelectedStateListDrawable(stateAspectRatioImageView.getDrawable(), mActiveControlsWidgetColor));
+
+        // Set custom labels if provided
+        LinearLayout stateAspectRatio = findViewById(R.id.state_aspect_ratio);
+        LinearLayout stateRotate = findViewById(R.id.state_rotate);
+        LinearLayout stateScale = findViewById(R.id.state_scale);
+        TextView textViewCrop = stateAspectRatio != null ? stateAspectRatio.findViewById(R.id.text_view_crop) : null;
+        TextView textViewRotate = stateRotate != null ? stateRotate.findViewById(R.id.text_view_rotate) : null;
+        TextView textViewScale = stateScale != null ? stateScale.findViewById(R.id.text_view_scale) : null;
+
+        if (mCropLabel != null && textViewCrop != null) {
+            textViewCrop.setText(mCropLabel);
+        }
+        if (mRotateLabel != null && textViewRotate != null) {
+            textViewRotate.setText(mRotateLabel);
+        }
+        if (mScaleLabel != null && textViewScale != null) {
+            textViewScale.setText(mScaleLabel);
+        }
     }
 
     private void setupAspectRatioWidget(@NonNull Intent intent) {
@@ -458,7 +484,8 @@ public class UCropActivity extends AppCompatActivity {
             aspectRatioList = new ArrayList<>();
             aspectRatioList.add(new AspectRatio(null, 1, 1));
             aspectRatioList.add(new AspectRatio(null, 3, 4));
-            aspectRatioList.add(new AspectRatio(getString(R.string.ucrop_label_original).toUpperCase(),
+            String originalLabel = mAspectRatioOriginalLabel != null ? mAspectRatioOriginalLabel : getString(R.string.ucrop_label_original);
+            aspectRatioList.add(new AspectRatio(originalLabel.toUpperCase(),
                     CropImageView.SOURCE_IMAGE_ASPECT_RATIO, CropImageView.SOURCE_IMAGE_ASPECT_RATIO));
             aspectRatioList.add(new AspectRatio(null, 3, 2));
             aspectRatioList.add(new AspectRatio(null, 16, 9));
@@ -501,7 +528,9 @@ public class UCropActivity extends AppCompatActivity {
     }
 
     private void setupRotateWidget() {
-        mTextViewRotateAngle = findViewById(R.id.text_view_rotate);
+        // Use the rotate layout scope so we don't overwrite the bottom bar label
+        View rotateLayout = findViewById(R.id.layout_rotate_wheel);
+        mTextViewRotateAngle = rotateLayout != null ? rotateLayout.findViewById(R.id.text_view_rotate) : null;
         ((HorizontalProgressWheelView) findViewById(R.id.rotate_scroll_wheel))
                 .setScrollingListener(new HorizontalProgressWheelView.ScrollingListener() {
                     @Override
@@ -539,7 +568,9 @@ public class UCropActivity extends AppCompatActivity {
     }
 
     private void setupScaleWidget() {
-        mTextViewScalePercent = findViewById(R.id.text_view_scale);
+        // Use the scale layout scope so we don't overwrite the bottom bar label
+        View scaleLayout = findViewById(R.id.layout_scale_wheel);
+        mTextViewScalePercent = scaleLayout != null ? scaleLayout.findViewById(R.id.text_view_scale) : null;
         ((HorizontalProgressWheelView) findViewById(R.id.scale_scroll_wheel))
                 .setScrollingListener(new HorizontalProgressWheelView.ScrollingListener() {
                     @Override

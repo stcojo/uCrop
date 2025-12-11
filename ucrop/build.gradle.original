@@ -1,12 +1,12 @@
 apply plugin: 'com.android.library'
-// Removed: apply from: '../mavenpush.gradle' - not needed for local development
+apply from: '../mavenpush.gradle'
 
 android {
-    compileSdk 34
+    compileSdk 36
     namespace = "com.yalantis.ucrop"
     defaultConfig {
-        minSdkVersion 16
-        targetSdkVersion 34
+        minSdkVersion 21
+        targetSdkVersion 36
         versionCode 27
         versionName "2.2.11-native"
 
@@ -31,16 +31,15 @@ android {
     sourceSets.main {
         jni.srcDirs = []
     }
-    lintOptions {
+    lint {
         abortOnError false
     }
 
 }
 
 dependencies {
-    implementation "androidx.appcompat:appcompat:1.7.1"
-    implementation "androidx.exifinterface:exifinterface:1.4.1"
-    implementation "androidx.transition:transition:1.6.0"
-    implementation "com.squareup.okhttp3:okhttp:5.1.0"
+    implementation "androidx.appcompat:appcompat:${androidx_appcompat_version}"
+    implementation "androidx.exifinterface:exifinterface:${androidx_exifinterface_version}"
+    implementation "androidx.transition:transition:${androidx_transition_version}"
+    implementation "com.squareup.okhttp3:okhttp:${okhttp_version}"
 }
-

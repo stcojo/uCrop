@@ -77,6 +77,10 @@ public class UCropFragment extends Fragment {
     @ColorInt
     private int mRootViewBackgroundColor;
     private int mLogoColor;
+    private String mAspectRatioOriginalLabel;
+    private String mCropLabel;
+    private String mRotateLabel;
+    private String mScaleLabel;
 
     private boolean mShowBottomControls;
 
@@ -140,6 +144,10 @@ public class UCropFragment extends Fragment {
     public void setupViews(View view, Bundle args) {
         mActiveControlsWidgetColor = args.getInt(UCrop.Options.EXTRA_UCROP_COLOR_CONTROLS_WIDGET_ACTIVE, ContextCompat.getColor(getContext(), R.color.ucrop_color_widget_active));
         mLogoColor = args.getInt(UCrop.Options.EXTRA_UCROP_LOGO_COLOR, ContextCompat.getColor(getContext(), R.color.ucrop_color_default_logo));
+        mAspectRatioOriginalLabel = args.getString(UCrop.Options.EXTRA_ASPECT_RATIO_ORIGINAL_LABEL);
+        mCropLabel = args.getString(UCrop.Options.EXTRA_CROP_LABEL);
+        mRotateLabel = args.getString(UCrop.Options.EXTRA_ROTATE_LABEL);
+        mScaleLabel = args.getString(UCrop.Options.EXTRA_SCALE_LABEL);
         mShowBottomControls = !args.getBoolean(UCrop.Options.EXTRA_HIDE_BOTTOM_CONTROLS, false);
         mRootViewBackgroundColor = args.getInt(UCrop.Options.EXTRA_UCROP_ROOT_VIEW_BACKGROUND_COLOR, ContextCompat.getColor(getContext(), R.color.ucrop_color_crop_background));
 
@@ -311,6 +319,24 @@ public class UCropFragment extends Fragment {
         stateScaleImageView.setImageDrawable(new SelectedStateListDrawable(stateScaleImageView.getDrawable(), mActiveControlsWidgetColor));
         stateRotateImageView.setImageDrawable(new SelectedStateListDrawable(stateRotateImageView.getDrawable(), mActiveControlsWidgetColor));
         stateAspectRatioImageView.setImageDrawable(new SelectedStateListDrawable(stateAspectRatioImageView.getDrawable(), mActiveControlsWidgetColor));
+
+        // Set custom labels if provided
+        LinearLayout stateAspectRatio = view.findViewById(R.id.state_aspect_ratio);
+        LinearLayout stateRotate = view.findViewById(R.id.state_rotate);
+        LinearLayout stateScale = view.findViewById(R.id.state_scale);
+        TextView textViewCrop = stateAspectRatio != null ? stateAspectRatio.findViewById(R.id.text_view_crop) : null;
+        TextView textViewRotate = stateRotate != null ? stateRotate.findViewById(R.id.text_view_rotate) : null;
+        TextView textViewScale = stateScale != null ? stateScale.findViewById(R.id.text_view_scale) : null;
+
+        if (mCropLabel != null && textViewCrop != null) {
+            textViewCrop.setText(mCropLabel);
+        }
+        if (mRotateLabel != null && textViewRotate != null) {
+            textViewRotate.setText(mRotateLabel);
+        }
+        if (mScaleLabel != null && textViewScale != null) {
+            textViewScale.setText(mScaleLabel);
+        }
     }
 
     private void setupAspectRatioWidget(@NonNull Bundle bundle, View view) {
@@ -323,7 +349,8 @@ public class UCropFragment extends Fragment {
             aspectRatioList = new ArrayList<>();
             aspectRatioList.add(new AspectRatio(null, 1, 1));
             aspectRatioList.add(new AspectRatio(null, 3, 4));
-            aspectRatioList.add(new AspectRatio(getString(R.string.ucrop_label_original).toUpperCase(),
+            String originalLabel = mAspectRatioOriginalLabel != null ? mAspectRatioOriginalLabel : getString(R.string.ucrop_label_original);
+            aspectRatioList.add(new AspectRatio(originalLabel.toUpperCase(),
                     CropImageView.SOURCE_IMAGE_ASPECT_RATIO, CropImageView.SOURCE_IMAGE_ASPECT_RATIO));
             aspectRatioList.add(new AspectRatio(null, 3, 2));
             aspectRatioList.add(new AspectRatio(null, 16, 9));
@@ -366,7 +393,9 @@ public class UCropFragment extends Fragment {
     }
 
     private void setupRotateWidget(View view) {
-        mTextViewRotateAngle = view.findViewById(R.id.text_view_rotate);
+        // Use the rotate layout scope so we don't overwrite the bottom bar label
+        View rotateLayout = view.findViewById(R.id.layout_rotate_wheel);
+        mTextViewRotateAngle = rotateLayout != null ? rotateLayout.findViewById(R.id.text_view_rotate) : null;
         ((HorizontalProgressWheelView) view.findViewById(R.id.rotate_scroll_wheel))
                 .setScrollingListener(new HorizontalProgressWheelView.ScrollingListener() {
                     @Override
@@ -404,7 +433,9 @@ public class UCropFragment extends Fragment {
     }
 
     private void setupScaleWidget(View view) {
-        mTextViewScalePercent = view.findViewById(R.id.text_view_scale);
+        // Use the scale layout scope so we don't overwrite the bottom bar label
+        View scaleLayout = view.findViewById(R.id.layout_scale_wheel);
+        mTextViewScalePercent = scaleLayout != null ? scaleLayout.findViewById(R.id.text_view_scale) : null;
         ((HorizontalProgressWheelView) view.findViewById(R.id.scale_scroll_wheel))
                 .setScrollingListener(new HorizontalProgressWheelView.ScrollingListener() {
                     @Override
