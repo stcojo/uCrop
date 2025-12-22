@@ -1,0 +1,6 @@
+./gradlew :ucrop:assembleRelease
+
+then run
+
+ cp /Users/stefan/Documents/flutter_libraries/uCrop/ucrop/build/outputs/aar/ucrop-release.aar \
+      /Users/stefan/Documents/flutter_libraries/flutter_image_cropper/image_cropper/android/libs/
